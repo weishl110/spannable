@@ -60,6 +60,7 @@ interface ISpannable {
     fun clickableSpan(
         @ColorInt color: Int,
         clickableText: String,
+        isUnderLine: Boolean = false,
         onClick: (() -> Unit)?
     ): ISpannable
 

@@ -220,23 +220,27 @@ class SpannableImpl private constructor() : ISpannable {
         return italic(*mCommonParams)
     }
 
+    /**
+     * 如果需要去除点击背景颜色需要设置TextView.highlightColo = 0
+     */
     override fun clickableSpan(
         @ColorInt color: Int,
         clickableText: String,
+        isUnderLine: Boolean,
         onClick: (() -> Unit)?
     ): ISpannable {
-        val weakReference = WeakReference(onClick)
         val span = mSpannable ?: return this
         val index = span.indexOf(clickableText)
         if (index < 0) return this
         span.setSpan(object : ClickableSpan() {
             override fun onClick(view: View) {
-                weakReference.get()?.invoke()
+                onClick?.invoke()
             }
 
             override fun updateDrawState(paint: TextPaint) {
                 super.updateDrawState(paint)
                 paint.color = color
+                paint.isUnderlineText = isUnderLine
             }
         }, index, index + clickableText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
